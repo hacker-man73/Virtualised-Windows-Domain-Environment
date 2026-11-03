@@ -12,7 +12,7 @@ ___________________________________________________
 
 To Begin, I created an instance of Windows Server 2022, configuring a static IP (IP: 192.168.0.2, Subnet: 255.255.255.0, Gateway: 192.168.0.1) and assigned the DNS server as 127.0.0.1 (the server itself).
 
-Next, I configured the local server settings (Installing updates, Changing the Server name to ("DC01" to represent that the server belongs as the Schema master, Operations Master, PDC & Infrastructure Master of the domain, all prior to the domain's creation)
+Next, I configured the local server settings (Installing updates, Changing the Server name to ("DC01" to represent that the server belongs as the Schema master, Operations Master, PDC & Infrastructure Master of the domain, all prior to the domain's creation).
 
 After the restart had completed to change the Server name, I ran the "Add new Roles & Features" option in the Server Manager, selected the Active Directory Domain Services (AD DS), beginning the creation process of the domain. Alongside installing AD DS, you must also install and Configure DNS (the Domain Naming System) as well as DHCP (Dynamic Host Connection Protocol) - More in this later!
 
@@ -38,8 +38,8 @@ Starting with DC02, in Server manager, I change the local server properties from
 To save the reader's time, I will not detail all the steps to join the other Domain Controllers. All the other DCs connected to the domain successfully, had DNS installed, and were promoted to Domain Controllers!
 
 DC04 is not a standard DC, I have selected during dcpromo that the server be a Read Only DC (RDC). This is because I would like to simulate a server being deployed in a local environment, where a full domain
-controller may not be neccessary 
+controller may not be neccessary. 
 
-(Imagining that the Little Network is based in Glasgow, with a small remote office in Cardiff, a RDC would be implemented here, to allow for the replication of users and OUs, but not changes as DC04's purpose would be to only serve on-prem logons to the network based in Cardiff via a Windows VPN to another server based in the Glasgow Server Room)
+(Imagining that the Little Network is based in Glasgow, with a small remote office in Cardiff, a RDC would be implemented here, to allow for the replication of users and OUs, but not changes as DC04's purpose would be to only serve on-prem logons to the network based in Cardiff via a Windows VPN to another server based in the Glasgow Server Room).
 
 ___________________________________________________
