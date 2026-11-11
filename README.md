@@ -43,3 +43,29 @@ controller may not be neccessary.
 (Imagining that the Little Network is based in Glasgow, with a small remote office in Cardiff, a RDC would be implemented here, to allow for the replication of users and OUs, but not changes as DC04's purpose would be to only serve on-prem logons to the network based in Cardiff via a Windows VPN to another server based in the Glasgow Server Room).
 
 ___________________________________________________
+
+## **CHAPTER 3: Configuring Active Directory, Network Shares and Group Policy**
+
+All the DCs have successfully been connected to the domain and are functioning as expected!
+
+Now is the exciting part I've been waiting for, which is to start the initial configuration of Active Directory Users & Computers. Firstly, I will be creating an Organisational Unit directory system. At the Top of the directory, underneath the Domain, I have created an OU callled The Little Network, followed by two Subfolders: Departments and Devices.
+
+Inside the Departments OU, are further Sub-folders for the departments inside the Little Network, with a respective group being created. For example, I have created a Finance OU and inside that OU is a group called 'Finance.' This is to allow for an easier way to manage the Finance Department in Group Policy (e.g. to assign a network share that only the finance department and IT have access to view).
+
+Before I start creating any users, I have already configured a 50GB Virtual Hard Disk for the file server I will be using for network shares. I created a shared area over the network, so that files are actually stored on this location >>> \\TLN-FILE-01\UserAreas\ and \\TLN-FILE-01\Departments\
+
+Now I can head back over to Active Directory Users & Computers, where I will create a User that has Admin Privlidges across the entire network:
+Username: g_admin (Global Administrator), Setting a secure password, Right-click & selecting 'Member of' I will now add the following groups to this user: Domain Admins; Enterprise Admins; Schema Admins; IT Administrators
+
+Additionally, I have created the group IT Administrators and assigned it as a member of: Administrators; Domain Admins; Enterprise Admins and Schema Admins to make it easier to assign admin privlidges rather than add lots of individual roles as with the g_admin user.
+
+Now that the user's roles have been taken care of, I need to ensure that the user's files are avalible across the network, regardless of which computer is logged into. I will head over to the Profile tab and edit the fields there. I am changing the Profile Path to use the share we created earlier: \\TLN-FILE-01\UserAreas\ and add the variable %username% to store the username, instead of having to manually type out (which is prone to human errors), doing the same for the Home Folder connect using drive letter H:\.
+
+I can now repeat this process for other departments, by creating a user in the Finance Department, Assigning their primary group as: Finance, the profile area and home folder respectively. To make this even easier to create new users within the various departments, we can now right click any user and select the 'Copy' feature, which will replicate the 'Profile' and 'Member Of' configurations!
+
+Lastly, I will configure a default domain group policy object. I am keeping this policy relatively simple - I will only edit the Default Domain Policy to configure the lockscreen and desktop wallpapers to a specific location.
+Respectively, I will go into: Computer Configuration -> Policies -> Administrative Templates -> Personalization -> Force a specific default lock screen image. I have enabled this feature and set the server to point the computers to the custom wallpaper stored at \\TLN-FILE-01\Resources\Wallpapers\LockscreenDefault.png and repeated this process for the default wallpaper for the Users under the User Configurations.
+
+All I have to do is Enable the policy and run 'gpupdate /force' via cmd on the rest of the computers, restart them for the changes to take effect, and the policy should be configured!
+
+___________________________________________________
