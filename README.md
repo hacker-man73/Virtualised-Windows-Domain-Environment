@@ -69,3 +69,42 @@ Respectively, I will go into: Computer Configuration -> Policies -> Administrati
 All I have to do is Enable the policy and run 'gpupdate /force' via cmd on the rest of the computers, restart them for the changes to take effect, and the policy should be configured!
 
 ___________________________________________________
+
+## **CHAPTER 4: Software Based Installation - Impero**
+
+In my virtualised environment, I would like to use software that allows me to remotely control multiple client & server computers at once, using a GUI. The requirements for this system are:
+Has a GUI / Can be accessed by a set of users within a group / Control multiple devices to perform tasks at once (e.g. run a batch file).
+
+For this, case, I will be using software called 'Impero Education Pro' which will allow me to meet the requirements. Impero is quite an old software program, so it does need .NET FrameWork 3.5 to be installed on the devices that will be running Impero. Additionally, because of the age of the software, I will be using an Outdated operating system as the server (Windows Server 2008R2 Enterprise with GUI). As the network cannot connect to the internet, I believe that this network is safe, as malware cannot enter the network.
+
+First, I will install .NET FrameWork 3.5 on Windows Server 2008R2. I can do this by using the Installation ISO File, which contains all the relevant packages for .NET 3.5 in the D:\Sources\Sxs\ Folder
+
+Now that the pre-installation requirement is complete, I will first install Impero Server - which will manage the software across the entire network. The Impero server serves as the principal point of communication, allowing for Users & Computers to sync with Impero and for Impero to connect to Active Directory Domain Services.
+
+For this installation of Impero Server, I have created a virtual hard disk, with a size of 75GB. This is to allow for Impero to have its files stored on a seperate location from the Windows Installation drive. In the event that the Windows Server is unavalible, the Hard disk containing all the relevant Impero Files can easily be recovered. 
+
+This method also allows for easier backups to be made of the Server. In the even that the server is unrecoverable, Windows Server can be re-installed, with Impero files ready from either a backup file server or the Virtual Hard disk, allowing for minimal downtime, and a seamless recovery (Impero will recognise its log & configuration files, allowing the server to resume operations where the server was left before the disaster.
+
+
+The Impero Server Installation has now concluded. I will configure it so that we can meet the first few requirements.
+1. Can be accessed by a set of users within a group.
+
+I will head back over to DC01, and create a new Group within the 'Departments' Organisational Unit called: 'Impero Administrators' and 'Impero Users'
+
+Additionally, I have created a user called "g_Impero" setting the member of as 'Impero Administrators' and denying local logons.
+
+I have also changed the 'IT Administrators' group to be a member of the 'Impero Administrators' group, so that IT Admins can have easy access to use the Impero Software.
+
+Heading back to Impero Server, I will change the directory services configuration. I have specified the domain controller as 'DC02.littlenetwork.local' as the Fully Qualified Domain Controller, 'g_Impero' as the user that can contact the directory for authorisation as well as the password for that user.
+
+Finally, I will change the group policy settings (within Impero). I have set the group 'Impero Administrators' to have full control over the network, Impero Server access as well as the full admin console for the client. And I have set the group 'Impero Users' to have limited access over the network to manage computers.
+
+Now that the server side configuration is complete, I will install the Impero Client on the server, which has completed successfully.
+
+I have also enabled a shared area on the Virtual Hard Disk containing the Impero Installation files and .NET Framework 3.5 files for clients.
+
+Lastly, I have installed the Impero client on a test machine connected to the network. I tried to control that test machine from the server client, and the test passed all checks.
+
+This concludes the Chapter on Impero's Installation! Next chapter will include Deployment of Windows!
+
+___________________________________________________
